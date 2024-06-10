@@ -11,19 +11,49 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.directions_car)),
-              Tab(icon: Icon(Icons.directions_transit)),
-              Tab(icon: Icon(Icons.directions_bike)),
-            ],
-          ),
+    return const Scaffold(
+      body: Row(
+  children: [
+    const Flexible( // Wrap the left side with Flexible
+      flex: 1, // Adjust flex value as needed
+      child: Column(
+        children: [
+          Text("Hi"),
+          Text("Hi2"),
+          Text("Hi3"),
+        ],
+      ),
+    ),
+    Flexible( // Allow DefaultTabController to take remaining space
+      flex: 2, // Adjust flex value as needed
+      child: DefaultTabController(
+        length: 3,
+        child: Column( // Wrap TabBar and TabBarView in a Column
+          children: [
+            TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.directions_car)),
+                Tab(icon: Icon(Icons.directions_transit)),
+                Tab(icon: Icon(Icons.directions_bike)),
+              ],
+            ),
+            Expanded( // Use Expanded to let TabBarView fill available space
+              child: TabBarView(
+                children: [
+                  // Your content for each tab goes here
+                  Center(child: Text("Car")),
+                  Center(child: Text("Transit")),
+                  Center(child: Text("Bike")),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
+    ),
+  ],
+),
     );
+    
   }
 }
