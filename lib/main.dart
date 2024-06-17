@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:registrationhelper/profile.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -12,22 +13,22 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Registrations 2024"),centerTitle: true,elevation: 2,),
+      appBar: AppBar(title: const Text("Registrations 2024"),centerTitle: true,elevation: 2,),
       body: Row(
   children: [
     Flexible( // Wrap the left side with Flexible
       flex: 1, // Adjust flex value as needed
       child: Container(
-        color: Color.fromARGB(255, 230, 230, 230),
+        color: const Color.fromARGB(255, 230, 230, 230),
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Text("Home"),
               ),
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   hintText: "Search",
                   border: OutlineInputBorder()
@@ -39,7 +40,7 @@ class Home extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ListTile(
                       leading: Image.asset('images/person.png',height: 20,width: 20,),
-                      title: Text("First Last Name"),
+                      title: const Text("First Last Name"),
                       subtitle: Text("Roll No 2401$index"),
                     );
                   },
@@ -50,13 +51,13 @@ class Home extends StatelessWidget {
         ),
       ),
     ),
-    Flexible( // Allow DefaultTabController to take remaining space
+     Flexible( // Allow DefaultTabController to take remaining space
       flex: 3, // Adjust flex value as needed
       child: DefaultTabController(
         length: 3,
         child: Column( // Wrap TabBar and TabBarView in a Column
           children: [
-            TabBar(
+            const TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.person), text: "Info"),
                 Tab(icon: Icon(Icons.image), text: "Picture"),
@@ -67,7 +68,7 @@ class Home extends StatelessWidget {
               child: TabBarView(
                 children: [
                   // Your content for each tab goes here
-                  Center(child: Text("Info")),
+                  Expanded(child: Profile()),
                   Center(child: Text("Picture")),
                   Center(child: Text("Changelog")),
                 ],
