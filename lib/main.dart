@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:registrationhelper/client.dart';
 import 'package:registrationhelper/profile.dart';
 
 void main() {
@@ -7,8 +8,25 @@ void main() {
   ));
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  @override
+  void initState() {
+    super.initState();
+    DioHelper.prepareJar();
+    DioHelper.getListOfStudents((data,error){
+      print('test');
+      print(data);
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
