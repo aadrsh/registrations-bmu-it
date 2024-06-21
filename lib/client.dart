@@ -9,8 +9,6 @@ class DioHelper {
       dio.options.baseUrl = 'http://localhost:3000';
       dio.options.connectTimeout = const Duration(seconds: 5);
       dio.options.receiveTimeout = const Duration(seconds: 3);
-      Map<String, String> header = new Map();
-
       isJarPrepared = true;
     }
   }
@@ -20,8 +18,7 @@ class DioHelper {
   static Future<void> getListOfStudents(
       Function(List<dynamic>?, bool) callback) async {
     try {
-      Response res = await dio.get('/api/student');
-      print(res);
+      Response res = await dio.get('/api/students');
       if (res.statusCode == 200) {
         callback(res.data, false);
       } else {

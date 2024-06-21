@@ -17,13 +17,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<dynamic>? _listOfStudents;
+
   @override
   void initState() {
     super.initState();
     DioHelper.prepareJar();
     DioHelper.getListOfStudents((data, error) {
-      print('test');
-      print(data);
+      if (!error) {
+        _listOfStudents = data;
+        setState(() {});
+      }
     });
   }
 
@@ -55,20 +59,23 @@ class _HomeState extends State<Home> {
                           hintText: "Search", border: OutlineInputBorder()),
                     ),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: 20,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: Image.asset(
-                              'images/person.png',
-                              height: 20,
-                              width: 20,
+                      child: _listOfStudents == null
+                          ? const Text("Please wait")
+                          : ListView.builder(
+                              itemCount: _listOfStudents!.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading: Image.asset(
+                                    'images/person.png',
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                  title: Text(
+                                      "${_listOfStudents![index]['firstName']} ${_listOfStudents![index]['lastName']}"),
+                                  subtitle: Text("Roll No 24001$index"),
+                                );
+                              },
                             ),
-                            title: const Text("First Last Name"),
-                            subtitle: Text("Roll No 2401$index"),
-                          );
-                        },
-                      ),
                     ),
                   ],
                 ),

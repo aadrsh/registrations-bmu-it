@@ -59,6 +59,7 @@ class _CameraAppState extends State<CameraApp> {
 
   @override
   void dispose() {
+    print("disponse method called");
     if (controller != null) controller!.dispose();
     super.dispose();
   }
@@ -74,6 +75,7 @@ class _CameraAppState extends State<CameraApp> {
 
       // Get the bytecode of the captured image
       _capturedByteArray = await file.readAsBytes();
+
       setState(() {});
       // Optionally, you can delete the file after reading its content
       // await file.delete();
@@ -141,7 +143,13 @@ class _CameraAppState extends State<CameraApp> {
                     Text("Captured Image"),
                     _capturedByteArray == null
                         ? Text("")
-                        : Image.memory(_capturedByteArray!),
+                        : Column(children: [
+                            Image.memory(_capturedByteArray!),
+                            ElevatedButton(
+                              child: const Text("Save"),
+                              onPressed: () {},
+                            )
+                          ])
                   ],
                 ))
           ],
