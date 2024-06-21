@@ -9,6 +9,8 @@ void main() {
   ));
 }
 
+int? _selectedUser;
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -41,81 +43,93 @@ class _HomeState extends State<Home> {
       ),
       body: Row(
         children: [
+          getLeftNavigationPanel(),
           Flexible(
-            // Wrap the left side with Flexible
-            flex: 1, // Adjust flex value as needed
-            child: Container(
-              color: const Color.fromARGB(255, 230, 230, 230),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text("Home"),
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(
-                          hintText: "Search", border: OutlineInputBorder()),
-                    ),
-                    Expanded(
-                      child: _listOfStudents == null
-                          ? const Text("Please wait")
-                          : ListView.builder(
-                              itemCount: _listOfStudents!.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: Image.asset(
-                                    'images/person.png',
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  title: Text(
-                                      "${_listOfStudents![index]['firstName']} ${_listOfStudents![index]['lastName']}"),
-                                  subtitle: Text("Roll No 24001$index"),
-                                );
-                              },
-                            ),
-                    ),
-                  ],
-                ),
+              flex: 2,
+              child: _selectedUser == null
+                  ? Text("Please select a student")
+                  : getMainScreen(_selectedUser!))
+          // : Text("Test"))
+        ],
+      ),
+    );
+  }
+
+  getMainScreen(int id) {
+    return DefaultTabController(
+      length: 3,
+      child: Column(
+        // Wrap TabBar and TabBarView in a Column
+        children: [
+          const TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.person), text: "Info"),
+              Tab(icon: Icon(Icons.image), text: "Picture"),
+              Tab(
+                icon: Icon(Icons.history),
+                text: "Changelog",
               ),
-            ),
+            ],
           ),
-          Flexible(
-            // Allow DefaultTabController to take remaining space
-            flex: 3, // Adjust flex value as needed
-            child: DefaultTabController(
-              length: 3,
-              child: Column(
-                // Wrap TabBar and TabBarView in a Column
-                children: [
-                  const TabBar(
-                    tabs: [
-                      Tab(icon: Icon(Icons.person), text: "Info"),
-                      Tab(icon: Icon(Icons.image), text: "Picture"),
-                      Tab(
-                        icon: Icon(Icons.history),
-                        text: "Changelog",
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    // Use Expanded to let TabBarView fill available space
-                    child: TabBarView(
-                      children: [
-                        // Your content for each tab goes here
-                        Profile(),
-                        CameraApp(),
-                        Center(child: Text("Changelog")),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          Expanded(
+            // Use Expanded to let TabBarView fill available space
+            child: TabBarView(
+              children: [
+                // Your content for each tab goes here
+                Profile(studentId: id),
+                CameraApp(studentId: id),
+                const Center(child: Text("Changelog")),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  getLeftNavigationPanel() {
+    return Flexible(
+      flex: 1,
+      child: Container(
+        color: const Color.fromARGB(255, 230, 230, 230),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text("Home"),
+              ),
+              const TextField(
+                decoration: InputDecoration(
+                    hintText: "Search", border: OutlineInputBorder()),
+              ),
+              Expanded(
+                child: _listOfStudents == null
+                    ? const Text("Please wait")
+                    : ListView.builder(
+                        itemCount: _listOfStudents!.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            onTap: () {
+                              _selectedUser = _listOfStudents![index]['id'];
+                              setState(() {});
+                            },
+                            leading: Image.asset(
+                              'images/person.png',
+                              height: 20,
+                              width: 20,
+                            ),
+                            title: Text(
+                                "${_listOfStudents![index]['firstName']} ${_listOfStudents![index]['lastName']}"),
+                            subtitle: Text("Roll No 24001$index"),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

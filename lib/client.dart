@@ -6,7 +6,7 @@ class DioHelper {
   static PersistCookieJar? jar;
   static prepareJar() async {
     if (!isJarPrepared) {
-      dio.options.baseUrl = 'http://localhost:3000';
+      dio.options.baseUrl = 'http://10.5.5.93:3000';
       dio.options.connectTimeout = const Duration(seconds: 5);
       dio.options.receiveTimeout = const Duration(seconds: 3);
       isJarPrepared = true;
@@ -19,6 +19,20 @@ class DioHelper {
       Function(List<dynamic>?, bool) callback) async {
     try {
       Response res = await dio.get('/api/students');
+      if (res.statusCode == 200) {
+        callback(res.data, false);
+      } else {
+        callback(null, true);
+      }
+    } catch (e) {
+      callback(null, true);
+    }
+  }
+
+  static Future<void> getStudentById(
+      int id, Function(dynamic, bool) callback) async {
+    try {
+      Response res = await dio.get('/api/students/$id');
       if (res.statusCode == 200) {
         callback(res.data, false);
       } else {

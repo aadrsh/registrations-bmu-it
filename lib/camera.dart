@@ -2,13 +2,19 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:registrationhelper/utils.dart';
 
 List<CameraDescription>? _cameras;
 
 /// CameraApp is the Main Application.
 class CameraApp extends StatefulWidget {
+  final int studentId;
+
   /// Default Constructor
-  const CameraApp({super.key});
+  const CameraApp({
+    super.key,
+    required this.studentId,
+  });
 
   @override
   State<CameraApp> createState() => _CameraAppState();
@@ -64,6 +70,10 @@ class _CameraAppState extends State<CameraApp> {
     super.dispose();
   }
 
+  void disposeController() {
+    if (controller != null) controller!.dispose();
+  }
+
   void _captureImage() async {
     try {
       if (controller!.value.isTakingPicture) {
@@ -116,6 +126,7 @@ class _CameraAppState extends State<CameraApp> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Flexible(
               flex: 1,
@@ -143,13 +154,13 @@ class _CameraAppState extends State<CameraApp> {
                     Text("Captured Image"),
                     _capturedByteArray == null
                         ? Text("")
-                        : Column(children: [
-                            Image.memory(_capturedByteArray!),
-                            ElevatedButton(
-                              child: const Text("Save"),
-                              onPressed: () {},
-                            )
-                          ])
+                        : Flexible(child: Image.memory(_capturedByteArray!)),
+                    ElevatedButton(
+                      child: const Text("Save"),
+                      onPressed: () {
+                        uploadImage("somename.jpg", _capturedByteArray!);
+                      },
+                    )
                   ],
                 ))
           ],

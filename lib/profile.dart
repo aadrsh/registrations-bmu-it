@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:registrationhelper/client.dart';
 
 class Profile extends StatefulWidget {
-  Profile({Key? key}) : super(key: key);
+  final int studentId;
+  Profile({
+    Key? key,
+    required this.studentId,
+  }) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+  dynamic student;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DioHelper.getStudentById(widget.studentId, (data, error) {
+      if (!error) student = data;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -47,6 +64,7 @@ class _ProfileState extends State<Profile> {
                               hintText: "John",
                               border: OutlineInputBorder()),
                         )),
+                    Text("${student == null ? "" : student['firstName']}"),
                     const SizedBox(
                       width: 10,
                     ),
