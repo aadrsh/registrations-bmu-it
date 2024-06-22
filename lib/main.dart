@@ -9,8 +9,6 @@ void main() {
   ));
 }
 
-int? _selectedUser;
-
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -20,6 +18,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<dynamic>? _listOfStudents;
+  int? _selectedUser;
+  String? _selectedUsername;
 
   @override
   void initState() {
@@ -44,47 +44,52 @@ class _HomeState extends State<Home> {
       body: Row(
         children: [
           getLeftNavigationPanel(),
-          Flexible(
-              flex: 2,
-              child: _selectedUser == null
-                  ? Text("Please select a student")
-                  : getMainScreen(_selectedUser!))
+          getMainScreen()
           // : Text("Test"))
         ],
       ),
     );
   }
 
-  getMainScreen(int id) {
-    return DefaultTabController(
-      length: 3,
-      child: Column(
-        // Wrap TabBar and TabBarView in a Column
-        children: [
-          const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.person), text: "Info"),
-              Tab(icon: Icon(Icons.image), text: "Picture"),
-              Tab(
-                icon: Icon(Icons.history),
-                text: "Changelog",
-              ),
-            ],
-          ),
-          Expanded(
-            // Use Expanded to let TabBarView fill available space
-            child: TabBarView(
-              children: [
-                // Your content for each tab goes here
-                Profile(studentId: id),
-                CameraApp(studentId: id),
-                const Center(child: Text("Changelog")),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+  Flexible getMainScreen() {
+    return Flexible(
+        flex: 2,
+        child: _selectedUser == null
+            ? Text("Please select a student")
+            : DefaultTabController(
+                length: 3,
+                child: Column(
+                  // Wrap TabBar and TabBarView in a Column
+                  children: [
+                    const TabBar(
+                      tabs: [
+                        Tab(icon: Icon(Icons.person), text: "Info"),
+                        Tab(icon: Icon(Icons.image), text: "Picture"),
+                        Tab(
+                          icon: Icon(Icons.history),
+                          text: "Changelog",
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      // Use Expanded to let TabBarView fill available space
+                      child: TabBarView(
+                        children: [
+                          // Your content for each tab goes here
+                          Profile(
+                              studentId: _selectedUser!,
+                              key: ValueKey("${_selectedUser!}profile")),
+                          CameraApp(
+                            studentId: _selectedUser!,
+                            studentName: _selectedUsername!,
+                          ),
+                          const Center(child: Text("Changelog")),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ));
   }
 
   getLeftNavigationPanel() {
@@ -112,8 +117,12 @@ class _HomeState extends State<Home> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {
-                              _selectedUser = _listOfStudents![index]['id'];
-                              setState(() {});
+                              setState(() {
+                                _selectedUser = _listOfStudents![index]['id'];
+                                _selectedUsername =
+                                    "${_listOfStudents![index]['firstName']} ${_listOfStudents![index]['lastName']}";
+                              });
+                              print(_selectedUser);
                             },
                             leading: Image.asset(
                               'images/person.png',

@@ -9,21 +9,26 @@ List<CameraDescription>? _cameras;
 /// CameraApp is the Main Application.
 class CameraApp extends StatefulWidget {
   final int studentId;
+  final String studentName;
 
   /// Default Constructor
   const CameraApp({
     super.key,
     required this.studentId,
+    required this.studentName,
   });
 
   @override
   State<CameraApp> createState() => _CameraAppState();
 }
 
-class _CameraAppState extends State<CameraApp> {
+class _CameraAppState extends State<CameraApp>
+    with AutomaticKeepAliveClientMixin {
   CameraController? controller;
   CameraDescription? _selectedCamera;
   Uint8List? _capturedByteArray;
+  @override
+  bool get wantKeepAlive => true;
 
   void getAllAvailableCameras() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -132,6 +137,7 @@ class _CameraAppState extends State<CameraApp> {
               flex: 1,
               child: Column(
                 children: [
+                  Text(widget.studentName),
                   Text("Live Image"),
                   Flexible(
                       // child: AspectRatio(
@@ -142,6 +148,7 @@ class _CameraAppState extends State<CameraApp> {
                       onPressed: () {
                         print("Capturing Image");
                         _captureImage();
+                        print("ID of Student is ${widget.studentId}");
                       },
                       child: Text("Capture"))
                 ],
