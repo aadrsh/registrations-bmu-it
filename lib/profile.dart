@@ -33,23 +33,21 @@ class _ProfileState extends State<Profile> {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Image.asset(
-              "images/person.png",
-              height: 200,
-              width: 200,
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(10.0),
+          //   child: Image.asset(
+          //     "images/person.png",
+          //     height: 200,
+          //     width: 200,
+          //   ),
+          // ),
           TextFormField(
             decoration: const InputDecoration(
                 label: Text("Roll No."),
                 hintText: "240XXX",
                 border: OutlineInputBorder()),
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 10),
           Row(children: [
             Expanded(
                 flex: 1,
@@ -59,9 +57,7 @@ class _ProfileState extends State<Profile> {
                       hintText: "John",
                       border: OutlineInputBorder()),
                 )),
-            const SizedBox(
-              width: 10,
-            ),
+            const SizedBox(width: 10),
             Expanded(
                 flex: 1,
                 child: TextFormField(
@@ -71,8 +67,34 @@ class _ProfileState extends State<Profile> {
                       border: OutlineInputBorder()),
                 )),
           ]),
-          const SizedBox(
-            height: 20,
+          const SizedBox(height: 10),
+          const Row(
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: DropdownMenu(
+                      hintText: "Department",
+                      dropdownMenuEntries: [
+                        DropdownMenuEntry(
+                            value: "som", label: "School of Management"),
+                        DropdownMenuEntry(
+                            value: "soet",
+                            label: "School of Engineering and Technology"),
+                        DropdownMenuEntry(value: "sol", label: "School of Law"),
+                        DropdownMenuEntry(
+                            value: "sols", label: "School of Liberal Studies")
+                      ])),
+              Expanded(
+                  flex: 1,
+                  child: DropdownMenu(
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(value: "mba", label: "MBA"),
+                      DropdownMenuEntry(value: "btech", label: "B.Tech"),
+                      DropdownMenuEntry(value: "bba", label: "BBA"),
+                      DropdownMenuEntry(value: "bmi", label: "BMI"),
+                    ],
+                  ))
+            ],
           ),
           TextFormField(
             decoration: const InputDecoration(
@@ -80,9 +102,7 @@ class _ProfileState extends State<Profile> {
                 hintText: "SOET/SOM/SOL/SOLS",
                 border: OutlineInputBorder()),
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 10),
           TextFormField(
             decoration: const InputDecoration(
                 label: Text("Branch"),
