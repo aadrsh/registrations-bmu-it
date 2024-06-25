@@ -29,6 +29,21 @@ class DioHelper {
     }
   }
 
+  static Future<void> addNewStudent(String firstName, String lastName,
+      Function(dynamic, bool) callback) async {
+    dynamic body = {"firstName": firstName, "lastName": lastName};
+    try {
+      Response res = await dio.post('/api/students', data: body);
+      if (res.statusCode == 200) {
+        callback(res.data, false);
+      } else {
+        callback(null, true);
+      }
+    } catch (e) {
+      callback(null, true);
+    }
+  }
+
   static Future<void> getStudentById(
       int id, Function(dynamic, bool) callback) async {
     try {

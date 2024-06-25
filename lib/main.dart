@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registrationhelper/camera.dart';
 import 'package:registrationhelper/client.dart';
+import 'package:registrationhelper/newStudentDialog.dart';
 import 'package:registrationhelper/profile.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<dynamic>? _listOfStudents;
-  int? _selectedUser;
+  int? _selectedUserId;
   String? _selectedUsername;
 
   @override
@@ -54,7 +55,7 @@ class _HomeState extends State<Home> {
   Flexible getMainScreen() {
     return Flexible(
         flex: 2,
-        child: _selectedUser == null
+        child: _selectedUserId == null
             ? Text("Please select a student")
             : DefaultTabController(
                 length: 3,
@@ -77,10 +78,10 @@ class _HomeState extends State<Home> {
                         children: [
                           // Your content for each tab goes here
                           Profile(
-                              studentId: _selectedUser!,
-                              key: ValueKey("${_selectedUser!}profile")),
+                              studentId: _selectedUserId!,
+                              key: ValueKey("${_selectedUserId!}profile")),
                           CameraApp(
-                            studentId: _selectedUser!,
+                            studentId: _selectedUserId!,
                             studentName: _selectedUsername!,
                           ),
                           const Center(child: Text("Changelog")),
@@ -105,6 +106,20 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.all(10.0),
                 child: Text("Home"),
               ),
+              TextButton(
+                  onPressed: () {
+                    showDialog<int>(
+                        context: context,
+                        builder: (context) {
+                          return NewStudentDialog();
+                        }).then((value) {
+                      print("I got data $value");
+                    });
+                  },
+                  child: Text("Add new Student")),
+              const SizedBox(
+                height: 10,
+              ),
               const TextField(
                 decoration: InputDecoration(
                     hintText: "Search", border: OutlineInputBorder()),
@@ -118,11 +133,11 @@ class _HomeState extends State<Home> {
                           return ListTile(
                             onTap: () {
                               setState(() {
-                                _selectedUser = _listOfStudents![index]['id'];
+                                _selectedUserId = _listOfStudents![index]['id'];
                                 _selectedUsername =
                                     "${_listOfStudents![index]['firstName']} ${_listOfStudents![index]['lastName']}";
                               });
-                              print(_selectedUser);
+                              print(_selectedUserId);
                             },
                             leading: Image.asset(
                               'images/person.png',

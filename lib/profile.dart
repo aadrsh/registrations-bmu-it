@@ -25,6 +25,9 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  TextEditingController rollNoTextEditingController = TextEditingController();
+  TextEditingController rollno = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,6 +45,7 @@ class _ProfileState extends State<Profile> {
           //   ),
           // ),
           TextFormField(
+            controller: rollNoTextEditingController,
             decoration: const InputDecoration(
                 label: Text("Roll No."),
                 hintText: "240XXX",
@@ -96,6 +100,7 @@ class _ProfileState extends State<Profile> {
                   ))
             ],
           ),
+          const SizedBox(height: 10),
           TextFormField(
             decoration: const InputDecoration(
                 label: Text("School"),
