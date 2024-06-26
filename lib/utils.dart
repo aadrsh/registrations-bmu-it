@@ -22,7 +22,7 @@ Future<void> uploadImage(
   try {
     // Send the request
     Response response = await dio.post(
-      'http://10.5.5.93:3000/upload',
+      'http://10.5.5.52:3000/upload',
       data: formData,
     );
 
