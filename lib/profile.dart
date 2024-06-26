@@ -15,18 +15,19 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   dynamic student;
 
+  TextEditingController rollNoTextEditingController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     DioHelper.getStudentById(widget.studentId, (data, error) {
       if (!error) student = data;
+      print(student['rollno']);
+      rollNoTextEditingController.text = '${student['rollno'] ?? ""}';
       setState(() {});
     });
   }
-
-  TextEditingController rollNoTextEditingController = TextEditingController();
-  TextEditingController rollno = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ class DioHelper {
   static PersistCookieJar? jar;
   static prepareJar() async {
     if (!isJarPrepared) {
-      dio.options.baseUrl = 'http://10.5.5.93:3000';
+      dio.options.baseUrl = 'http://10.5.5.52:3000';
       dio.options.connectTimeout = const Duration(seconds: 5);
       dio.options.receiveTimeout = const Duration(seconds: 3);
       isJarPrepared = true;
