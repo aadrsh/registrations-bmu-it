@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 
@@ -18,9 +16,10 @@ class DioHelper {
   static final dio = Dio();
 
   static Future<void> getListOfStudents(
-      Function(List<dynamic>?, bool) callback) async {
+      String searchTerm, Function(List<dynamic>?, bool) callback) async {
     try {
-      Response res = await dio.get('/api/students');
+      Response res = await dio
+          .get('/api/students', queryParameters: {'searchTerm': searchTerm});
 
       if (res.statusCode == 200) {
         callback(res.data, false);
@@ -37,7 +36,9 @@ class DioHelper {
     dynamic body = {"firstName": firstName, "lastName": lastName};
     try {
       Response res = await dio.post('/api/students', data: body);
-      if (res.statusCode == 200) {
+      print('created');
+      print(res.statusCode);
+      if (res.statusCode == 201) {
         callback(res.data, false);
       } else {
         callback(null, true);

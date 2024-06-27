@@ -4,11 +4,13 @@ import 'package:registrationhelper/newStudentDialog.dart';
 class LeftNavigationPanel extends StatefulWidget {
   List<dynamic>? list;
   Function(int) onTap;
+  Function(String) onTextChange;
 
   LeftNavigationPanel({
     super.key,
     this.list,
     required this.onTap,
+    required this.onTextChange,
   });
 
   @override
@@ -35,18 +37,19 @@ class _LeftNavigationPanelState extends State<LeftNavigationPanel> {
                   showDialog<int>(
                       context: context,
                       builder: (context) {
-                        return NewStudentDialog();
+                        return const NewStudentDialog();
                       }).then((value) {
-                    print("I got data $value");
+                    if (value != -1 && value != null) widget.onTap(value);
                   });
                 },
-                child: Text("Add new Student")),
+                child: const Text("Add new Student")),
             const SizedBox(
               height: 10,
             ),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              decoration: const InputDecoration(
                   hintText: "Search", border: OutlineInputBorder()),
+              onChanged: widget.onTextChange,
             ),
             Expanded(
               child: widget.list == null
@@ -65,7 +68,8 @@ class _LeftNavigationPanelState extends State<LeftNavigationPanel> {
                           ),
                           title: Text(
                               "${widget.list![index]['firstName']} ${widget.list![index]['lastName']}"),
-                          subtitle: Text("Roll No 24001$index"),
+                          subtitle:
+                              Text("Roll No ${widget.list![index]['rollno']}"),
                         );
                       },
                     ),

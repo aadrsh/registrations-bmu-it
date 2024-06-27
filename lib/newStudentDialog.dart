@@ -48,7 +48,7 @@ class _NewStudentDialogState extends State<NewStudentDialog> {
       actions: [
         TextButton(
             onPressed: () {
-              Navigator.pop(context, 2);
+              Navigator.pop(context, -1);
             },
             child: const Text("Cancel")),
         TextButton(
@@ -62,7 +62,7 @@ class _NewStudentDialogState extends State<NewStudentDialog> {
                     var lastName = lastNameTextController.text;
                     DioHelper.addNewStudent(firstName, lastName, (data, error) {
                       if (!error) {
-                        Navigator.pop(context, data);
+                        Navigator.pop(context, data['id']);
                       }
                     });
                   },

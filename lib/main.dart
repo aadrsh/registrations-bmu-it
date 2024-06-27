@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:registrationhelper/camera.dart';
 import 'package:registrationhelper/client.dart';
-import 'package:registrationhelper/leftNavPanel.dart';
+import 'package:registrationhelper/leftScreen.dart';
 import 'package:registrationhelper/profile.dart';
 import 'package:registrationhelper/rightScreen.dart';
 
@@ -22,12 +22,15 @@ class _HomeState extends State<Home> {
   List<dynamic>? _listOfStudents;
   int? _selectedUserId;
   String? _selectedUsername;
-
   @override
   void initState() {
     super.initState();
+    _loadStudents('');
+  }
+
+  void _loadStudents(String searchTerm) {
     DioHelper.prepareJar();
-    DioHelper.getListOfStudents((data, error) {
+    DioHelper.getListOfStudents(searchTerm, (data, error) {
       if (!error) {
         _listOfStudents = data;
         setState(() {});
@@ -48,13 +51,15 @@ class _HomeState extends State<Home> {
           Flexible(
             flex: 1,
             child: LeftNavigationPanel(
-              list: _listOfStudents,
-              onTap: (id) {
-                setState(() {
-                  _selectedUserId = id;
-                });
-              },
-            ),
+                list: _listOfStudents,
+                onTap: (id) {
+                  setState(() {
+                    _selectedUserId = id;
+                  });
+                },
+                onTextChange: (text) {
+                  _loadStudents(text);
+                }),
           ),
           Flexible(
             flex: 2,

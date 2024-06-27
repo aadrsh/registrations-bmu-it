@@ -19,7 +19,6 @@ class _RightScreenState extends State<RightScreen> {
         : DefaultTabController(
             length: 3,
             child: Column(
-              // Wrap TabBar and TabBarView in a Column
               children: [
                 const TabBar(
                   tabs: [
@@ -32,13 +31,11 @@ class _RightScreenState extends State<RightScreen> {
                   ],
                 ),
                 Expanded(
-                  // Use Expanded to let TabBarView fill available space
                   child: TabBarView(
                     children: [
-                      // Your content for each tab goes here
                       Profile(
                         studentId: widget.selectedStudent!,
-                        // key: ValueKey("${widget.selectedStudent!}profile"),
+                        key: ValueKey("${widget.selectedStudent!}profile"),
                       ),
                       CameraApp(
                         studentId: widget.selectedStudent!,
