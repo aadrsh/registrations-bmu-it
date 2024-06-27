@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 
@@ -19,6 +21,7 @@ class DioHelper {
       Function(List<dynamic>?, bool) callback) async {
     try {
       Response res = await dio.get('/api/students');
+
       if (res.statusCode == 200) {
         callback(res.data, false);
       } else {

@@ -9,13 +9,11 @@ List<CameraDescription>? _cameras;
 /// CameraApp is the Main Application.
 class CameraApp extends StatefulWidget {
   final int studentId;
-  final String studentName;
 
   /// Default Constructor
   const CameraApp({
     super.key,
     required this.studentId,
-    required this.studentName,
   });
 
   @override
@@ -137,7 +135,7 @@ class _CameraAppState extends State<CameraApp>
               flex: 1,
               child: Column(
                 children: [
-                  Text(widget.studentName),
+                  Text("Student Name"),
                   Text("Live Image"),
                   Flexible(
                       // child: AspectRatio(

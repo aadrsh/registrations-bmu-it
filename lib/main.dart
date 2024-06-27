@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:registrationhelper/camera.dart';
 import 'package:registrationhelper/client.dart';
-import 'package:registrationhelper/newStudentDialog.dart';
+import 'package:registrationhelper/leftNavPanel.dart';
 import 'package:registrationhelper/profile.dart';
+import 'package:registrationhelper/rightScreen.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -44,116 +45,24 @@ class _HomeState extends State<Home> {
       ),
       body: Row(
         children: [
-          getLeftNavigationPanel(),
-          getMainScreen()
-          // : Text("Test"))
-        ],
-      ),
-    );
-  }
-
-  Flexible getMainScreen() {
-    return Flexible(
-        flex: 2,
-        child: _selectedUserId == null
-            ? Text("Please select a student")
-            : DefaultTabController(
-                length: 3,
-                child: Column(
-                  // Wrap TabBar and TabBarView in a Column
-                  children: [
-                    const TabBar(
-                      tabs: [
-                        Tab(icon: Icon(Icons.person), text: "Info"),
-                        Tab(icon: Icon(Icons.image), text: "Picture"),
-                        Tab(
-                          icon: Icon(Icons.history),
-                          text: "Changelog",
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      // Use Expanded to let TabBarView fill available space
-                      child: TabBarView(
-                        children: [
-                          // Your content for each tab goes here
-                          Profile(
-                              studentId: _selectedUserId!,
-                              key: ValueKey("${_selectedUserId!}profile")),
-                          CameraApp(
-                            studentId: _selectedUserId!,
-                            studentName: _selectedUsername!,
-                          ),
-                          const Center(child: Text("Changelog")),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ));
-  }
-
-  getLeftNavigationPanel() {
-    return Flexible(
-      flex: 1,
-      child: Container(
-        color: const Color.fromARGB(255, 230, 230, 230),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text("Home"),
-              ),
-              TextButton(
-                  onPressed: () {
-                    showDialog<int>(
-                        context: context,
-                        builder: (context) {
-                          return NewStudentDialog();
-                        }).then((value) {
-                      print("I got data $value");
-                    });
-                  },
-                  child: Text("Add new Student")),
-              const SizedBox(
-                height: 10,
-              ),
-              const TextField(
-                decoration: InputDecoration(
-                    hintText: "Search", border: OutlineInputBorder()),
-              ),
-              Expanded(
-                child: _listOfStudents == null
-                    ? const Text("Please wait")
-                    : ListView.builder(
-                        itemCount: _listOfStudents!.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            onTap: () {
-                              setState(() {
-                                _selectedUserId = _listOfStudents![index]['id'];
-                                _selectedUsername =
-                                    "${_listOfStudents![index]['firstName']} ${_listOfStudents![index]['lastName']}";
-                              });
-                              print(_selectedUserId);
-                            },
-                            leading: Image.asset(
-                              'images/person.png',
-                              height: 20,
-                              width: 20,
-                            ),
-                            title: Text(
-                                "${_listOfStudents![index]['firstName']} ${_listOfStudents![index]['lastName']}"),
-                            subtitle: Text("Roll No 24001$index"),
-                          );
-                        },
-                      ),
-              ),
-            ],
+          Flexible(
+            flex: 1,
+            child: LeftNavigationPanel(
+              list: _listOfStudents,
+              onTap: (id) {
+                setState(() {
+                  _selectedUserId = id;
+                });
+              },
+            ),
           ),
-        ),
+          Flexible(
+            flex: 2,
+            child: RightScreen(
+              selectedStudent: _selectedUserId,
+            ),
+          )
+        ],
       ),
     );
   }
