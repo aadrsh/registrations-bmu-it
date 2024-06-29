@@ -15,32 +15,27 @@ class _RightScreenState extends State<RightScreen> {
   @override
   Widget build(BuildContext context) {
     return widget.selectedStudent == null
-        ? Text("OWU")
+        ? Center(child: Text("OWU"))
         : DefaultTabController(
-            length: 3,
+            length: 2,
             child: Column(
               children: [
                 const TabBar(
                   tabs: [
-                    Tab(icon: Icon(Icons.person), text: "Info"),
-                    Tab(icon: Icon(Icons.image), text: "Picture"),
-                    Tab(
-                      icon: Icon(Icons.history),
-                      text: "Changelog",
-                    ),
+                    Tab(text: "Picture"),
+                    Tab(text: "Info"),
                   ],
                 ),
                 Expanded(
                   child: TabBarView(
                     children: [
+                      CameraApp(
+                        studentId: widget.selectedStudent!,
+                      ),
                       Profile(
                         studentId: widget.selectedStudent!,
                         key: ValueKey("${widget.selectedStudent!}profile"),
                       ),
-                      CameraApp(
-                        studentId: widget.selectedStudent!,
-                      ),
-                      const Center(child: Text("Changelog")),
                     ],
                   ),
                 ),

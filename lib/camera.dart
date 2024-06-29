@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:registrationhelper/client.dart';
 import 'package:registrationhelper/utils.dart';
 
 List<CameraDescription>? _cameras;
@@ -12,9 +13,9 @@ class CameraApp extends StatefulWidget {
 
   /// Default Constructor
   const CameraApp({
-    Key? key,
+    super.key,
     required this.studentId,
-  }) : super(key: key);
+  });
 
   @override
   State<CameraApp> createState() => _CameraAppState();
@@ -25,6 +26,8 @@ class _CameraAppState extends State<CameraApp>
   CameraController? controller;
   CameraDescription? _selectedCamera;
   Uint8List? _capturedByteArray;
+  bool? uploadStatus;
+  dynamic student;
 
   @override
   bool get wantKeepAlive => true;
@@ -34,6 +37,17 @@ class _CameraAppState extends State<CameraApp>
     _cameras = await availableCameras();
     setState(() {});
     print(_cameras);
+  }
+
+  void _loadStudentData() {
+    print('loading student data for camera');
+    DioHelper.getStudentById(widget.studentId, (data, error) {
+      if (!error) {
+        setState(() {
+          student = data;
+        });
+      }
+    });
   }
 
   void initController() async {
@@ -70,6 +84,13 @@ class _CameraAppState extends State<CameraApp>
   void initState() {
     super.initState();
     getAllAvailableCameras();
+    addOnCompleteTwo((rollno, status) {
+      if (rollno == widget.studentId) {
+        setState(() {
+          uploadStatus = status;
+        });
+      }
+    });
   }
 
   @override
@@ -107,10 +128,28 @@ class _CameraAppState extends State<CameraApp>
     }
   }
 
+  _loadImage() {
+    DioHelper.getImage(widget.studentId, (array, error) {
+      if (!error) {
+        setState(() {
+          _capturedByteArray = array;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(
         context); // Ensure AutomaticKeepAliveClientMixin is used correctly
+
+    // Load student data whenever widget.studentId changes
+    if (student == null || student['rollno'] != widget.studentId) {
+      _capturedByteArray = null;
+      uploadStatus = null;
+      _loadStudentData();
+      _loadImage();
+    }
 
     if (_cameras == null) {
       return Center(child: CircularProgressIndicator());
@@ -119,21 +158,31 @@ class _CameraAppState extends State<CameraApp>
     if (controller == null || !controller!.value.isInitialized) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          DropdownButton<CameraDescription>(
-            hint: Text("Select a Camera"),
-            value: _selectedCamera,
-            items: _cameras!.map((camera) {
-              return DropdownMenuItem<CameraDescription>(
-                value: camera,
-                child: Text(camera.name),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedCamera = value!;
-              });
-            },
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: DropdownButton<CameraDescription>(
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+              hint: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("Select a Camera"),
+              ),
+              value: _selectedCamera,
+              items: _cameras!.map((camera) {
+                return DropdownMenuItem<CameraDescription>(
+                  value: camera,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(camera.name),
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedCamera = value!;
+                });
+              },
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -146,47 +195,81 @@ class _CameraAppState extends State<CameraApp>
     }
 
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(5.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
             child: Column(
               children: [
-                Text("Live Image"),
                 Flexible(
                   child: CameraPreview(controller!),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    print("Capturing Image");
-                    _captureImage();
-                    print("ID of Student is ${widget.studentId}");
-                  },
-                  child: Text("Capture"),
                 ),
               ],
             ),
           ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("${widget.studentId}"),
+              const SizedBox(height: 10),
+              Text("${student['name']}"),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  print("Capturing Image");
+                  _captureImage();
+                  print("ID of Student is ${widget.studentId}");
+                },
+                child: Text("Capture"),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_capturedByteArray != null) {
+                    uploadImage(student['rollno'], "${student['rollno']}.jpg",
+                        _capturedByteArray!);
+                  } else {
+                    print("No image captured to save.");
+                  }
+                },
+                child: const Text("Save"),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text('<- Live Image'),
+              const SizedBox(height: 10),
+              Text("Captured Image ->"),
+              const SizedBox(height: 10),
+              if (uploadStatus == null)
+                Text(
+                  "Upload : Pending",
+                  style: TextStyle(color: Colors.orange),
+                )
+              else if (uploadStatus!)
+                Text(
+                  "Upload : Success",
+                  style: TextStyle(color: Colors.green),
+                )
+              else
+                Text(
+                  "Upload : Failed",
+                  style: TextStyle(color: Colors.red),
+                )
+            ],
+          ),
           Expanded(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Captured Image"),
                 _capturedByteArray == null
                     ? Text("No image captured")
                     : Flexible(
                         child: Image.memory(_capturedByteArray!),
                       ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_capturedByteArray != null) {
-                      uploadImage("somename.jpg", _capturedByteArray!);
-                    } else {
-                      print("No image captured to save.");
-                    }
-                  },
-                  child: const Text("Save"),
-                ),
               ],
             ),
           ),

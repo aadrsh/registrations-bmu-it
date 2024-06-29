@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 
@@ -31,9 +33,9 @@ class DioHelper {
     }
   }
 
-  static Future<void> addNewStudent(String firstName, String lastName,
-      Function(dynamic, bool) callback) async {
-    dynamic body = {"firstName": firstName, "lastName": lastName};
+  static Future<void> addNewStudent(
+      String name, Function(dynamic, bool) callback) async {
+    dynamic body = {"name": name};
     try {
       Response res = await dio.post('/api/students', data: body);
       print('created');
@@ -45,6 +47,46 @@ class DioHelper {
       }
     } catch (e) {
       callback(null, true);
+    }
+  }
+
+  static Future<void> getImage(int rollno,
+      Function(Uint8List? imageByteArray, bool error) callback) async {
+    try {
+      String imageUrl = '/uploads/${rollno}.jpg';
+
+      // Fetch image byte data from network
+      Response response = await dio.get(
+        imageUrl,
+        options: Options(responseType: ResponseType.bytes),
+      );
+
+      if (response.statusCode == 200) {
+        // Convert response data to Uint8List
+        callback(Uint8List.fromList(response.data), false);
+      } else {
+        print('Failed to load image: ${response.statusCode}');
+        callback(null, false);
+      }
+    } catch (e) {
+      print('Error loading image: $e');
+      callback(null, false);
+    }
+  }
+
+  static Future<void> getStatusCount(
+      Function(int photoCount, int bioCount, bool error) callback) async {
+    try {
+      Response res = await dio.get('/api/students/statusCount');
+      if (res.statusCode == 200) {
+        print(res.data);
+        callback(res.data['photoStatusCount'], res.data['biometricStatusCount'],
+            false);
+      } else {
+        callback(0, 0, true);
+      }
+    } catch (e) {
+      callback(0, 0, true);
     }
   }
 

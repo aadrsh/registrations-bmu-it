@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:registrationhelper/camera.dart';
 import 'package:registrationhelper/client.dart';
 import 'package:registrationhelper/leftScreen.dart';
-import 'package:registrationhelper/profile.dart';
 import 'package:registrationhelper/rightScreen.dart';
 
 void main() {
@@ -41,11 +39,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Registrations 2024"),
-        centerTitle: true,
-        elevation: 2,
-      ),
+      backgroundColor: Colors.white,
       body: Row(
         children: [
           Flexible(
@@ -62,7 +56,7 @@ class _HomeState extends State<Home> {
                 }),
           ),
           Flexible(
-            flex: 2,
+            flex: 4,
             child: RightScreen(
               selectedStudent: _selectedUserId,
             ),

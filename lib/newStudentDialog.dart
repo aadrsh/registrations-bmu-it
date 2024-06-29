@@ -9,8 +9,7 @@ class NewStudentDialog extends StatefulWidget {
 }
 
 class _NewStudentDialogState extends State<NewStudentDialog> {
-  TextEditingController firstNameTextController = TextEditingController();
-  TextEditingController lastNameTextController = TextEditingController();
+  TextEditingController nameTextController = TextEditingController();
   bool isProcessing = false;
   @override
   Widget build(BuildContext context) {
@@ -25,19 +24,10 @@ class _NewStudentDialogState extends State<NewStudentDialog> {
                 height: 10,
               ),
               TextFormField(
-                controller: firstNameTextController,
+                controller: nameTextController,
                 decoration: const InputDecoration(
-                  labelText: "First Name",
-                  hintText: "John",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: lastNameTextController,
-                decoration: const InputDecoration(
-                  labelText: "Last Name",
-                  hintText: "Doe",
+                  labelText: "Full Name",
+                  hintText: "John Doe",
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -58,9 +48,8 @@ class _NewStudentDialogState extends State<NewStudentDialog> {
                     setState(() {
                       isProcessing = true;
                     });
-                    var firstName = firstNameTextController.text;
-                    var lastName = lastNameTextController.text;
-                    DioHelper.addNewStudent(firstName, lastName, (data, error) {
+                    var name = nameTextController.text;
+                    DioHelper.addNewStudent(name, (data, error) {
                       if (!error) {
                         Navigator.pop(context, data['id']);
                       }
