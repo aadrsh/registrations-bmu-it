@@ -53,7 +53,7 @@ class DioHelper {
   static Future<void> getImage(int rollno,
       Function(Uint8List? imageByteArray, bool error) callback) async {
     try {
-      String imageUrl = '/uploads/${rollno}.jpg';
+      String imageUrl = '/uploads/$rollno.jpg';
 
       // Fetch image byte data from network
       Response response = await dio.get(
@@ -69,7 +69,7 @@ class DioHelper {
         callback(null, false);
       }
     } catch (e) {
-      print('Error loading image: $e');
+      print('Catched Exception : Error loading image: $e');
       callback(null, false);
     }
   }

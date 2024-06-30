@@ -15,7 +15,7 @@ class _RightScreenState extends State<RightScreen> {
   @override
   Widget build(BuildContext context) {
     return widget.selectedStudent == null
-        ? Center(child: Text("OWU"))
+        ? const Center(child: Text("OWU"))
         : DefaultTabController(
             length: 2,
             child: Column(

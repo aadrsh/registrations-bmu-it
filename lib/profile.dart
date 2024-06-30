@@ -4,7 +4,7 @@ import 'package:registrationhelper/client.dart';
 class Profile extends StatefulWidget {
   final int studentId;
 
-  Profile({Key? key, required this.studentId}) : super(key: key);
+  const Profile({super.key, required this.studentId});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -64,13 +64,13 @@ class _ProfileState extends State<Profile> {
         children: [
           Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               value,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
         ],

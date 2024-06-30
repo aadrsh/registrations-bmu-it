@@ -28,15 +28,35 @@ class _CameraAppState extends State<CameraApp>
   Uint8List? _capturedByteArray;
   bool? uploadStatus;
   dynamic student;
-
+  bool? errorFindingCamera;
+  bool? errorInitCamera;
   @override
   bool get wantKeepAlive => true;
 
   void getAllAvailableCameras() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    _cameras = await availableCameras();
-    setState(() {});
-    print(_cameras);
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+      _cameras = await availableCameras();
+      setState(() {});
+      print(_cameras);
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Camera Error'),
+          content: const Text('Camera may be used by other applications'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Retry'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                getAllAvailableCameras();
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _loadStudentData() {
@@ -62,11 +82,11 @@ class _CameraAppState extends State<CameraApp>
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Camera Error'),
-            content: Text('Failed to initialize camera.'),
+            title: const Text('Camera Error'),
+            content: const Text('Failed to initialize camera.'),
             actions: <Widget>[
               TextButton(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -85,6 +105,7 @@ class _CameraAppState extends State<CameraApp>
     super.initState();
     getAllAvailableCameras();
     addOnCompleteTwo((rollno, status) {
+      print('status updated in camera.dart');
       if (rollno == widget.studentId) {
         setState(() {
           uploadStatus = status;
@@ -152,7 +173,7 @@ class _CameraAppState extends State<CameraApp>
     }
 
     if (_cameras == null) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (controller == null || !controller!.value.isInitialized) {
@@ -188,7 +209,7 @@ class _CameraAppState extends State<CameraApp>
             onPressed: () {
               initController();
             },
-            child: Text("Init Controller"),
+            child: const Text("Init Controller"),
           ),
         ],
       );
@@ -221,7 +242,7 @@ class _CameraAppState extends State<CameraApp>
                   _captureImage();
                   print("ID of Student is ${widget.studentId}");
                 },
-                child: Text("Capture"),
+                child: const Text("Capture"),
               ),
               const SizedBox(
                 height: 10,
@@ -240,22 +261,22 @@ class _CameraAppState extends State<CameraApp>
               const SizedBox(
                 height: 10,
               ),
-              Text('<- Live Image'),
+              const Text('<- Live Image'),
               const SizedBox(height: 10),
-              Text("Captured Image ->"),
+              const Text("Captured Image ->"),
               const SizedBox(height: 10),
               if (uploadStatus == null)
-                Text(
+                const Text(
                   "Upload : Pending",
                   style: TextStyle(color: Colors.orange),
                 )
               else if (uploadStatus!)
-                Text(
+                const Text(
                   "Upload : Success",
                   style: TextStyle(color: Colors.green),
                 )
               else
-                Text(
+                const Text(
                   "Upload : Failed",
                   style: TextStyle(color: Colors.red),
                 )
@@ -266,7 +287,7 @@ class _CameraAppState extends State<CameraApp>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _capturedByteArray == null
-                    ? Text("No image captured")
+                    ? const Text("No image captured")
                     : Flexible(
                         child: Image.memory(_capturedByteArray!),
                       ),

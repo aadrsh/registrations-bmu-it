@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:registrationhelper/client.dart';
-import 'package:registrationhelper/newStudentDialog.dart';
 import 'package:registrationhelper/utils.dart';
 
 class LeftNavigationPanel extends StatefulWidget {
@@ -22,19 +21,17 @@ class LeftNavigationPanel extends StatefulWidget {
 class _LeftNavigationPanelState extends State<LeftNavigationPanel> {
   int photoCount = 0;
   int bioCount = 0;
-
+  String searchText = "";
   @override
   void initState() {
     super.initState();
     addOnCompleteOne((rollno, status) {
-      print('called addOnCompleteOne');
-
+      print('called addOnCompleteOne inside leftScreen.dart');
       // Iterate over widget.list to find and update photoStatus
       int length = widget.list!.length;
       for (int i = 0; i < length; i++) {
-        print(widget.list![i]['rollno'].runtimeType);
         if (widget.list![i]['rollno'] == rollno) {
-          print('matchfound');
+          print('list tile marked green');
           setState(() {
             widget.list![i]['photoStatus'] = true;
           });
@@ -69,9 +66,17 @@ class _LeftNavigationPanelState extends State<LeftNavigationPanel> {
               height: 10,
             ),
             TextField(
-              decoration: const InputDecoration(
-                  hintText: "Search", border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        _reloadCount();
+                        widget.onTextChange(searchText);
+                      },
+                      icon: Icon(Icons.search)),
+                  hintText: "Search",
+                  border: OutlineInputBorder()),
               onChanged: (text) {
+                searchText = text;
                 _reloadCount();
                 widget.onTextChange(text);
               },
@@ -87,11 +92,6 @@ class _LeftNavigationPanelState extends State<LeftNavigationPanel> {
                             _reloadCount();
                             widget.onTap(widget.list![index]['rollno']);
                           },
-                          leading: Image.asset(
-                            'images/person.png',
-                            height: 20,
-                            width: 20,
-                          ),
                           title: Text("${widget.list![index]['name']}"),
                           subtitle:
                               Text("Roll No ${widget.list![index]['rollno']}"),

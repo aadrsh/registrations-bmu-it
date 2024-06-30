@@ -45,6 +45,7 @@ Future<void> uploadImage(
 }
 
 void callbacks(rollno, bool status) {
+  print('calling callbacks');
   if (onCompleteOne != null) {
     onCompleteOne!(rollno, status);
   }
@@ -58,5 +59,5 @@ void addOnCompleteOne(Function(int, bool) onComplete) {
 }
 
 void addOnCompleteTwo(Function(int, bool) onComplete) {
-  onCompleteOne = onComplete;
+  onCompleteTwo = onComplete;
 }
