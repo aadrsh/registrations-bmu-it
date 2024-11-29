@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:registrationhelper/client.dart';
 import 'package:registrationhelper/utils.dart';
 
 List<CameraDescription>? _cameras;
+dynamic student;
 
 /// CameraApp is the Main Application.
 class CameraApp extends StatefulWidget {
@@ -34,6 +36,16 @@ class _CameraAppState extends State<CameraApp>
     _cameras = await availableCameras();
     setState(() {});
     print(_cameras);
+  }
+
+  void _loadStudentData() {
+    DioHelper.getStudentById(widget.studentId, (data, error) {
+      if (!error) {
+        setState(() {
+          student = data;
+        });
+      }
+    });
   }
 
   void initController() async {
@@ -180,7 +192,8 @@ class _CameraAppState extends State<CameraApp>
                 ElevatedButton(
                   onPressed: () {
                     if (_capturedByteArray != null) {
-                      uploadImage("somename.jpg", _capturedByteArray!);
+                      uploadImage(
+                          "${student['rollno']}.jpg", _capturedByteArray!);
                     } else {
                       print("No image captured to save.");
                     }
